@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor de Números</title>
+</head>
+<body>
+    <h1>Convertir Número a Palabra y Voz</h1>
+    <input type="number" id="numero" placeholder="Ingresa un número">
+    <button onclick="convertir()">Convertir</button>
+    
+    <p id="resultado"></p>
+    <audio id="audio" controls></audio>
+
+    <script>
+        async function convertir() {
+            const numero = document.getElementById('numero').value;
+            
+            const response = await fetch('/convertir', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ numero: parseInt(numero) })
+            });
+            
+            const data = await response.json();
+            document.getElementById('resultado').textContent = `El número ${numero} se escribe como: ${data.texto}`;
+            
+            // Reproducir el audio
+            const audio = document.getElementById('audio');
+            audio.src = data.audio;
+            audio.play();
+        }
+    </script>
+</body>
+</html>
